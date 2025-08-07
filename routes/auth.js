@@ -6,10 +6,10 @@ const router = express.Router();
 // Register Route
 
 router.post("/authregister", async (req, res) => {
-  const { name,email, password } = req.body;
+  const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    return res.status(400).json({ msg: "Name ,Email and password are required." });
+    return res.status(400).json({ msg: "Name, Email and Password are required." });
   }
 
   try {
@@ -19,11 +19,21 @@ router.post("/authregister", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
-    res.status(201).json({ msg: "User registered successfully." });
+    res.status(201).json({ 
+      msg: "User registered successfully.",
+      userId: newUser._id,
+      name: newUser.name
+    });
   } 
+  catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error." });
+  }
+});
+
   catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error." });
