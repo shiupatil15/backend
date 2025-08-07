@@ -6,10 +6,10 @@ const router = express.Router();
 // Register Route
 
 router.post("/authregister", async (req, res) => {
-  const { email, password } = req.body;
+  const { name,email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ msg: "Email and password are required." });
+  if (!name || !email || !password) {
+    return res.status(400).json({ msg: "Name ,Email and password are required." });
   }
 
   try {
