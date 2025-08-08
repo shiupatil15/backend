@@ -42,6 +42,7 @@ router.post("/authregister", async (req, res) => {
 
 // Login Route
 
+// Login Route
 router.post("/authlogin", async (req, res) => {
   const { email, password } = req.body;
 
@@ -60,7 +61,13 @@ router.post("/authlogin", async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials." });
     }
 
-    res.status(200).json({ msg: "Login successful." });
+    // ✅ Send userId in response so Android can store it
+    res.status(200).json({
+      msg: "Login successful.",
+      userId: user._id,
+      name: user.name
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error." });
