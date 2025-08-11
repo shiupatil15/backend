@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = 5000;
 const path = require("path");
-const authRoutes = require("./routes/auth"); // path to auth.js
-app.use("/api", authRoutes);
+
 
 const cors = require("cors");
 app.use(cors());
