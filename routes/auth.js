@@ -75,19 +75,19 @@ router.post("/authlogin", async (req, res) => {
 });
 
 // GET user by ID
-router.get('/user/:id', async (req, res) => {
+router.get('/authuser/:id', async (req, res) => {
     try {
         const userId = req.params.id;
 
         // Find user in database
-        const user = await User.findById(userId).select('-password'); // Exclude password
-        if (!user) {
+        const authuser = await User.findById(userId).select('-password'); // Exclude password
+        if (!authuser) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
         res.json({
             success: true,
-            user
+            authuser
         });
     } catch (err) {
         console.error(err);
