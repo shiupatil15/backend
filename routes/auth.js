@@ -74,24 +74,24 @@ router.post("/authlogin", async (req, res) => {
   }
 });
 
-// GET user by ID
-router.get('/authuser/:id', async (req, res) => {
+// GET /api/authuser?userId=123
+router.get("/authuser", async (req, res) => {
     try {
-        const userId = req.params.id;
-
-        // Find user in database
-        const authuser = await User.findById(userId).select('-password'); // Exclude password
-        if (!authuser) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+        const { userId } = req.query; // from ?userId=123
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "User ID is required" });
         }
 
-        res.json({
-            success: true,
-            authuser
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: 'Server error' });
+        const user = await User.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
+
 module.exports = router;
