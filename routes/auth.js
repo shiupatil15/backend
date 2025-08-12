@@ -1,10 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const User = require("../models/User"); // import user
+const User = require("../models/User"); // import user model
 const router = express.Router();
 
-// Register Route
-
+// REGISTER
 router.post("/authregister", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -24,25 +23,16 @@ router.post("/authregister", async (req, res) => {
 
     res.status(201).json({ 
       msg: "User registered successfully.",
-      userId: newUser._id,
+      userId: newUser._id, // ✅ send userId so Android can store it
       name: newUser.name
     });
-  } 
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error." });
   }
 });
 
-  catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: "Server error." });
-  }
-});
-
-// Login Route
-
-// Login Route
+// LOGIN
 router.post("/authlogin", async (req, res) => {
   const { email, password } = req.body;
 
@@ -61,38 +51,36 @@ router.post("/authlogin", async (req, res) => {
       return res.status(400).json({ msg: "Invalid credentials." });
     }
 
-    // ✅ Send userId in response so Android can store it
     res.status(200).json({
       msg: "Login successful.",
-      userId: user._id,
+      userId: user._id, // ✅ send userId
       name: user.name
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error." });
   }
 });
 
-// GET user by ID
+// GET USER BY ID
 router.get('/user/:id', async (req, res) => {
-    try {
-        const userId = req.params.id;
+  try {
+    const userId = req.params.id;
 
-        // Find user in database
-        const user = await User.findById(userId).select('-password'); // Exclude password
-        if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
-        }
-
-        res.json({
-            success: true,
-            user
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: 'Server error' });
+    const user = await User.findById(userId).select('-password'); // exclude password
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
+
+    res.json({
+      success: true,
+      user
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 });
 
 module.exports = router;
+
