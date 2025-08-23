@@ -90,16 +90,20 @@ router.post("/authlogin", async (req, res) => {
 // ========================= GET USER BY ID =========================
 router.get("/user/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(req.params.id).select("name email");
     if (!user) {
       return res.status(404).json({
         success: false,
         msg: "User not found"
       });
     }
+
     res.json({
       success: true,
-      user
+      user: {
+        name: user.name,
+        email: user.email
+      }
     });
   } catch (err) {
     console.error(err);
@@ -109,5 +113,6 @@ router.get("/user/:id", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
